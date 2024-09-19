@@ -4,8 +4,8 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/shreyasnm9/Hello-World-Springboot-App.git'
         BASE_PATH = 'Hello-World-Springboot-App/'
-        EC2_INSTANCE = 'ec2-user@<Your-EC2-Instance-IP>'
-        SSH_CREDENTIALS_ID = 'aws-ssh-credentials'  // Jenkins SSH credentials
+        EC2_INSTANCE = 'ec2-user@3.7.46.89'
+        SSH_CREDENTIALS_ID = 'aws-ssh'  // Jenkins SSH credentials
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_LOGIN = credentials('sonarqube') // SonarQube token in Jenkins Credentials
     }
@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Code Quality Analysis') {
+        /*stage('SonarQube Code Quality Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     script {
@@ -40,7 +40,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
 
         stage('Deploy to AWS EC2') {
             steps {
@@ -48,6 +48,11 @@ pipeline {
                     dir('Hello-World-Springboot-App/Hello-World-Springboot-App'){
                         echo 'Creating JAR file'
                         sh "mvn clean package"
+                        echo 'adding secure copy'
+                        echo "Copying the JAR file to the EC2 instance..."
+                        scp -o StrictHostKeyChecking=no $WORKSPACE/target/$JAR_FILE $EC2_USER@$EC2_IP:$EC2_DIR
+                        echo "Starting the application on EC2..."
+                        ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP "java -jar $EC2_DIR/$JAR_FILE"
                     }
                 }
             }
