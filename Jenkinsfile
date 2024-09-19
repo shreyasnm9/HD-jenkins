@@ -7,7 +7,7 @@ pipeline {
         EC2_INSTANCE = 'ec2-user@<Your-EC2-Instance-IP>'
         SSH_CREDENTIALS_ID = 'aws-ssh-credentials'  // Jenkins SSH credentials
         SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_LOGIN = credentials('sonaqube') // SonarQube token in Jenkins Credentials
+        SONAR_LOGIN = credentials('sonarqube') // SonarQube token in Jenkins Credentials
     }
 
     stages {
