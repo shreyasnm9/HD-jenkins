@@ -14,7 +14,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Cloning the repository...'
-                dir(${BASE_PATH}){
+                dir('Hello-World-Springboot-App'){
                     sh 'rm -rf ${BASE_PATH}'
                     sh 'git clone ${REPO_URL}'
                 }
@@ -23,7 +23,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running Unit Tests...'
-                dir(${BASE_PATH}){
+                dir('Hello-World-Springboot-App'){
                     sh "mvn test"
                 }
             }
@@ -45,7 +45,7 @@ pipeline {
         stage('Deploy to AWS EC2') {
             steps {
                 script {
-                    dir(${BASE_PATH}){
+                    dir('Hello-World-Springboot-App'){
                         echo 'Creating JAR file'
                         sh "mvn clean package"
                     }
